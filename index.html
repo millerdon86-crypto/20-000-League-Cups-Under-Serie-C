@@ -61,7 +61,7 @@ button:hover {
 
 #rounds {
   display: flex;
-  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 20px;
   overflow-x: auto;
@@ -74,7 +74,7 @@ button:hover {
 
 .round {
   flex: 0 0 auto;
-  width: min(90vw, 500px);
+  width: clamp(280px, 40vw, 500px);
   box-sizing: border-box;
   scroll-snap-align: start;
   border: 2px solid #0078D7;
@@ -135,23 +135,8 @@ button:hover {
   }
 }
 
-@media (max-width: 600px) {
-  input, select {
-    font-size: 0.9em;
-  }
-
-  .round {
-    width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-  }
-
-  #rounds {
-    padding: 10px;
-    gap: 10px;
-  }
-}
-
+/* Responsive layout for smaller screens */
+@media (max-width: 768
   </style>
 </head>
 <body>
@@ -338,5 +323,6 @@ matchup.classList.add('winner-highlight');
   </script>
 </body>
 </html>
+
 
 
