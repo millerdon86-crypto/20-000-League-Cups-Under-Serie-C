@@ -367,10 +367,33 @@ button:hover {
     viewState = 'setup';
     updateNavButtons();
   }
+
+   document.getElementById('backBtn').addEventListener('click', () => {
+  if (viewState === 'names') {
+    // Go back to setup screen
+    document.getElementById('nameInputs').innerHTML = '';
+    document.getElementById('setup').style.display = 'block';
+    document.getElementById('tournament').style.display = 'none';
+    viewState = 'setup';
+    updateNavButtons();
+  } else if (viewState === 'round') {
+    alert("Back from round view is not yet implemented.");
+  } else if (viewState === 'summary') {
+    alert("Back from summary view is not yet implemented.");
+  }
+});
+
+document.getElementById('forwardBtn').addEventListener('click', () => {
+  if (viewState === 'names') {
+    startTournament(); // Starts the tournament and moves to round view
+  }
+});
+
 </script>
 
 </body>
 </html>
+
 
 
 
