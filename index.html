@@ -61,37 +61,26 @@ button:hover {
 
 #rounds {
   display: flex;
-  flex-wrap: nowrap;
   justify-content: center;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding: 20px 40px;
+  align-items: flex-start;
+  padding: 20px;
   box-sizing: border-box;
   max-height: calc(100vh - 100px);
+  overflow: hidden;
 }
 
 .round {
-  flex: 0 0 auto;
-  width: clamp(280px, 40vw, 500px);
-  box-sizing: border-box;
-  scroll-snap-align: start;
-  border: 2px solid #0078D7;
-  border-radius: 8px;
-  padding: 15px;
-  margin: 0 auto;
-  background-color: #fff;
-  opacity: 0;
-  transform: translateX(20px);
-  transition: all 0.6s ease;
+  width: clamp(280px, 90vw, 500px);
   max-height: calc(100vh - 120px);
   overflow-y: auto;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  opacity: 0;
+  transform: scale(0.95);
 }
 
 .round.visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: scale(1);
 }
 
 .round:nth-child(odd) {
@@ -151,7 +140,7 @@ button:hover {
 
   <div id="tournament" style="display:none;">
 
-    <div id="rounds"></div>
+    <div id="rounds" class="single-round-view"></div>
     <button onclick="startAgain()">Start Again</button>
   </div>
 
@@ -194,29 +183,25 @@ button:hover {
       }
     }
 
-   function generateRound(players) {
+  function generateRound(players) {
+  const container = document.getElementById('rounds');
+  container.innerHTML = ''; // Clear previous round
+
   const roundDiv = document.createElement('div');
-  roundDiv.className = 'round';
+  roundDiv.className = 'round visible';
   roundDiv.id = `round${currentRound}`;
 
-  const roundNames = {
-    32: "Round of 32",
-    16: "Round of 16",
-    8: "Quarter Final",
-    4: "Semi-Final",
-    2: "Final"
-  };
-
+  const roundNames = { 32: "Round of 32", 16: "Round of 16", 8: "Quarter Final", 4: "Semi-Final", 2: "Final" };
   const roundLabel = roundNames[players.length] || `Round ${currentRound + 1}`;
   roundDiv.innerHTML = `<h2>${roundLabel}</h2>`;
 
   const matchups = [];
+
   for (let i = 0; i < players.length; i += 2) {
     const p1 = players[i];
     const p2 = players[i + 1] || "BYE";
     const matchup = document.createElement('div');
     matchup.className = 'matchup';
-    matchup.style.animationDelay = `${i * 100}ms`;
     matchup.innerHTML = `
       <label>${p1} vs ${p2}</label>
       <input type="number" placeholder="${p1} score" class="score" data-player="${p1}">
@@ -227,7 +212,6 @@ button:hover {
         ${p2 !== "BYE" ? `<option value="${p2}">${p2}</option>` : ''}
       </select>
     `;
-
     const scores = matchup.querySelectorAll('.score');
     const select = matchup.querySelector('select');
     scores.forEach(input => {
@@ -239,7 +223,6 @@ button:hover {
         }
       });
     });
-
     roundDiv.appendChild(matchup);
     matchups.push(matchup);
   }
@@ -249,19 +232,9 @@ button:hover {
   confirmBtn.onclick = () => lockRound(matchups, roundDiv);
   roundDiv.appendChild(confirmBtn);
 
-  document.getElementById('rounds').appendChild(roundDiv);
-  rounds.push(roundDiv);
-
-  // Reveal and pan to the new round
-  setTimeout(() => {
-    roundDiv.classList.add('visible');
-    const container = document.getElementById('rounds');
-const containerRect = container.getBoundingClientRect();
-const roundRect = roundDiv.getBoundingClientRect();
-const offset = roundRect.left - containerRect.left - (container.clientWidth / 2) + (roundRect.width / 2);
-container.scrollBy({ left: offset, behavior: 'smooth' });
-  }, 50);
+  container.appendChild(roundDiv);
 }
+
 
     function lockRound(matchups, roundDiv) {
       const winners = [];
@@ -323,6 +296,7 @@ matchup.classList.add('winner-highlight');
   </script>
 </body>
 </html>
+
 
 
 
