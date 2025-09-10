@@ -165,11 +165,7 @@ button:hover {
     <div id="rounds" class="single-round-view"></div>
     <button onclick="startAgain()">Start Again</button>
   </div>
-  <div id="summaryContainer">
-  <h2>Round Summaries</h2>
-  <div id="summaries"></div>
-</div>
-
+  
   <script>
     let participants = [];
     let currentRound = 0;
@@ -286,27 +282,33 @@ button:hover {
     matchup.classList.add('winner-highlight');
   }
 
-  // Append summary to persistent container
-  const summaryBlock = document.createElement('p');
-  summaryBlock.textContent = summaryText.trim();
-  const summariesContainer = document.getElementById('summaries');
-  if (summariesContainer) {
-    summariesContainer.appendChild(summaryBlock);
-  }
+ // Create summary block to show between rounds
+const summaryBlock = document.createElement('div');
+summaryBlock.className = 'round visible';
+summaryBlock.innerHTML = `
+  <h2>${roundDiv.querySelector('h2').textContent} Summary</h2>
+  <pre style="background:#f9f9f9; border:1px dashed #ccc; padding:10px; white-space:pre-wrap;">${summaryText.trim()}</pre>
+  <button id="nextRoundBtn">Continue to Next Round</button>
+`;
 
-  // Proceed to next round or show final winner
+// Replace current round with summary
+const container = document.getElementById('rounds');
+container.innerHTML = '';
+container.appendChild(summaryBlock);
+
+// Handle next round transition
+document.getElementById('nextRoundBtn').onclick = () => {
+  container.innerHTML = '';
   if (winners.length > 1) {
     currentRound++;
     generateRound(winners);
   } else {
-    const finalBlock = document.createElement('p');
-    finalBlock.textContent = `🏅 Champion: ${winners[0]}`;
-    if (summariesContainer) {
-      summariesContainer.appendChild(finalBlock);
-    }
+    const finalDiv = document.createElement('div');
+    finalDiv.className = 'round visible';
+    finalDiv.innerHTML = `<h2>🏅 Champion: ${winners[0]}</h2>`;
+    container.appendChild(finalDiv);
   }
-}
-
+};
 
       roundDiv.classList.add('locked');
 
@@ -344,6 +346,7 @@ button:hover {
   </script>
 </body>
 </html>
+
 
 
 
