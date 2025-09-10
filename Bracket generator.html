@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>20,000 League Cups Under Serie C</title>
+  <style>
+   body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  padding: 10px 20px;
+  max-width: 900px;
+  margin: auto;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+h1 {
+  color: #0078D7;
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+input, button, select {
+  margin: 5px 0;
+  padding: 8px;
+  font-size: 1em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  background: #0078D7;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #005fa3;
+}
+
+.matchup {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  animation: slideInRight 0.5s ease forwards;
+  opacity: 0;
+}
+
+#rounds {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 10px 0 20px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 100px); /* Prevent vertical overflow */
+}
+
+.round {
+  flex: 0 0 auto;
+ width: calc(100vw - 60px);
+  max-width: 400px;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  border: 2px solid #0078D7;
+  border-radius: 8px;
+  padding: 15px;
+  margin-left: 10px;
+  background-color: #fff;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.6s ease;
+  max-height: calc(100vh - 120px); /* Prevent vertical scroll */
+  overflow-y: auto;
+}
+
+.round.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.round:nth-child(odd) {
+  background-color: #fdfdfd;
+  border-left-color: #0078D7;
+}
+
+.round:nth-child(even) {
+  background-color: #f7faff;
+  border-left-color: #00aaff;
+}
+
+.locked {
+  background: #e0e0e0;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.winner-highlight {
+  border: 2px solid #28a745;
+  background-color: #e6ffed;
+}
+
+#nameInputs {
+  margin-top: 20px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  input, select {
+    font-size: 0.9em;
+  }
+
+  .round {
+    min-width: 200px;
+    padding-left: 10px;
+  }
+}
+  </style>
+</head>
+<body>
+  <h1>🏆 20,000 League Cups Under Serie C</h1>
+
+  <div id="setup">
+    <label>Number of Participants:</label>
+    <input type="number" id="numParticipants" min="2" max="64">
+    <button onclick="generateNameInputs()">Next</button>
+    <div id="nameInputs"></div>
+  </div>
+
+  <div id="tournament" style="display:none;">
+
+    <div id="rounds"></div>
+    <button onclick="startAgain()">Start Again</button>
+  </div>
+
+  <script>
+    let participants = [];
+    let currentRound = 0;
+    let rounds = [];
+
+    function generateNameInputs() {
+      const num = parseInt(document.getElementById('numParticipants').value);
+      if (isNaN(num) || num < 2) return alert("Enter at least 2 participants");
+      const container = document.getElementById('nameInputs');
+      container.innerHTML = '<h3>Enter Participant Names:</h3>';
+      for (let i = 0; i < num; i++) {
+        container.innerHTML += `<input type="text" placeholder="Participant ${i+1}" id="p${i}"><br>`;
+      }
+      container.innerHTML += `<button onclick="startTournament()">Start Tournament</button>`;
+    }
+
+    function startTournament() {
+      participants = [];
+      const num = parseInt(document.getElementById('numParticipants').value);
+      for (let i = 0; i < num; i++) {
+        const name = document.getElementById(`p${i}`).value.trim();
+        if (!name) return alert("Please fill all names");
+        participants.push(name);
+      }
+      shuffle(participants);
+      currentRound = 0;
+      rounds = [];
+      document.getElementById('setup').style.display = 'none';
+      document.getElementById('tournament').style.display = 'block';
+      generateRound(participants);
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+   function generateRound(players) {
+  const roundDiv = document.createElement('div');
+  roundDiv.className = 'round';
+  roundDiv.id = `round${currentRound}`;
+
+  const roundNames = {
+    32: "Round of 32",
+    16: "Round of 16",
+    8: "Quarter Final",
+    4: "Semi-Final",
+    2: "Final"
+  };
+
+  const roundLabel = roundNames[players.length] || `Round ${currentRound + 1}`;
+  roundDiv.innerHTML = `<h2>${roundLabel}</h2>`;
+
+  const matchups = [];
+  for (let i = 0; i < players.length; i += 2) {
+    const p1 = players[i];
+    const p2 = players[i + 1] || "BYE";
+    const matchup = document.createElement('div');
+    matchup.className = 'matchup';
+    matchup.style.animationDelay = `${i * 100}ms`;
+    matchup.innerHTML = `
+      <label>${p1} vs ${p2}</label>
+      <input type="number" placeholder="${p1} score" class="score" data-player="${p1}">
+      <input type="number" placeholder="${p2} score" class="score" data-player="${p2}" ${p2 === "BYE" ? 'disabled value="0"' : ''}>
+      <select>
+        <option value="">Select Winner</option>
+        <option value="${p1}">${p1}</option>
+        ${p2 !== "BYE" ? `<option value="${p2}">${p2}</option>` : ''}
+      </select>
+    `;
+
+    const scores = matchup.querySelectorAll('.score');
+    const select = matchup.querySelector('select');
+    scores.forEach(input => {
+      input.addEventListener('input', () => {
+        const s1 = parseInt(scores[0].value);
+        const s2 = parseInt(scores[1].value);
+        if (!isNaN(s1) && !isNaN(s2)) {
+          select.value = s1 > s2 ? scores[0].dataset.player : scores[1].dataset.player;
+        }
+      });
+    });
+
+    roundDiv.appendChild(matchup);
+    matchups.push(matchup);
+  }
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.textContent = currentRound === 0 ? `Confirm ${roundLabel}` : "Submit Round";
+  confirmBtn.onclick = () => lockRound(matchups, roundDiv);
+  roundDiv.appendChild(confirmBtn);
+
+  document.getElementById('rounds').appendChild(roundDiv);
+  rounds.push(roundDiv);
+
+  // Reveal and pan to the new round
+  setTimeout(() => {
+    roundDiv.classList.add('visible');
+    const container = document.getElementById('rounds');
+const containerRect = container.getBoundingClientRect();
+const roundRect = roundDiv.getBoundingClientRect();
+const offset = roundRect.left - containerRect.left - (container.clientWidth / 2) + (roundRect.width / 2);
+container.scrollBy({ left: offset, behavior: 'smooth' });
+  }, 50);
+}
+
+    function lockRound(matchups, roundDiv) {
+      const winners = [];
+      let summaryText = `--- ${roundDiv.querySelector('h2').textContent} Results ---\n`;
+
+      for (const matchup of matchups) {
+        const select = matchup.querySelector('select');
+        const winner = select.value;
+        if (!winner) return alert("Select all winners before submitting");
+
+        const scores = matchup.querySelectorAll('.score');
+        const p1 = scores[0].dataset.player;
+        const p2 = scores[1].dataset.player;
+        const s1 = scores[0].value || "0";
+        const s2 = scores[1].value || "0";
+
+        summaryText += `${p1} ${s1} - ${s2} ${p2} → Winner: ${winner}\n`;
+
+        winners.push(winner);
+        select.disabled = true;
+        scores.forEach(input => input.disabled = true);
+        matchup.classList.add('locked');
+matchup.classList.add('winner-highlight');
+      }
+
+      roundDiv.classList.add('locked');
+
+      const summaryBlock = document.createElement('pre');
+      summaryBlock.textContent = summaryText;
+      summaryBlock.style.background = "#f9f9f9";
+      summaryBlock.style.border = "1px dashed #ccc";
+      summaryBlock.style.padding = "10px";
+      summaryBlock.style.marginTop = "10px";
+      summaryBlock.style.whiteSpace = "pre-wrap";
+      summaryBlock.style.userSelect = "text";
+      roundDiv.appendChild(summaryBlock);
+
+      if (winners.length === 1) {
+        const finalDiv = document.createElement('div');
+        finalDiv.className = 'round visible';
+        finalDiv.innerHTML = `<h2>🏆 Winner: ${winners[0]}</h2>`;
+        document.getElementById('rounds').appendChild(finalDiv);
+      } else {
+        currentRound++;
+        generateRound(winners);
+      }
+    }
+
+    function startAgain() {
+      participants = [];
+      currentRound = 0;
+      rounds = [];
+      document.getElementById('setup').style.display = 'block';
+      document.getElementById('tournament').style.display = 'none';
+      document.getElementById('nameInputs').innerHTML = '';
+      document.getElementById('rounds').innerHTML = '';
+      document.getElementById('numParticipants').value = '';
+    }
+  </script>
+</body>
+</html>
