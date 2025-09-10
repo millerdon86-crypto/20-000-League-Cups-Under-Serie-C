@@ -294,28 +294,7 @@ document.getElementById('nextRoundBtn').onclick = () => {
     container.appendChild(finalDiv);
   }
 };
-
-      roundDiv.classList.add('locked');
-
-      const summaryBlock = document.createElement('pre');
-      summaryBlock.textContent = summaryText;
-      summaryBlock.style.background = "#f9f9f9";
-      summaryBlock.style.border = "1px dashed #ccc";
-      summaryBlock.style.padding = "10px";
-      summaryBlock.style.marginTop = "10px";
-      summaryBlock.style.whiteSpace = "pre-wrap";
-      summaryBlock.style.userSelect = "text";
-      roundDiv.appendChild(summaryBlock);
-
-      if (winners.length === 1) {
-        const finalDiv = document.createElement('div');
-        finalDiv.className = 'round visible';
-        finalDiv.innerHTML = `<h2>🏆 Winner: ${winners[0]}</h2>`;
-        document.getElementById('rounds').appendChild(finalDiv);
-      } else {
-        currentRound++;
-        generateRound(winners);
-      }
+      
     }
 
     function startAgain() {
@@ -331,6 +310,7 @@ document.getElementById('nextRoundBtn').onclick = () => {
   </script>
 </body>
 </html>
+
 
 
 
