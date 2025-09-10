@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <title>20,000 League Cups Under Serie C</title>
   <style>
-   body {
+  body {
   font-family: 'Segoe UI', sans-serif;
   background: #f0f4f8;
   color: #333;
-  padding: 10px 20px;
-  max-width: none; /* Remove fixed width */
-  margin: 0 auto;   /* Keep horizontal centering */
-  padding: 10px 40px; /* Slightly wider padding */
+  padding: 10px 40px;
+  margin: 0 auto;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -54,7 +53,7 @@ button:hover {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;
-  margin: 10px 0;
+  margin: 15px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   animation: slideInRight 0.5s ease forwards;
   opacity: 0;
@@ -63,31 +62,30 @@ button:hover {
 #rounds {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  justify-content: center; /* Center children horizontally */
-  padding: 20px 40px;       /* More breathing room */
+  padding: 20px 40px;
   box-sizing: border-box;
-  max-height: calc(100vh - 100px); /* Prevent vertical overflow */
+  max-height: calc(100vh - 100px);
 }
 
 .round {
   flex: 0 0 auto;
-  width: min(90vw, 500px); /* Responsive width with max cap */
-  max-width: 400px;
+  width: min(90vw, 500px);
   box-sizing: border-box;
   scroll-snap-align: start;
   border: 2px solid #0078D7;
   border-radius: 8px;
   padding: 15px;
-  margin: 0 auto;          /* Center each round block */
+  margin: 0 auto;
   background-color: #fff;
   opacity: 0;
   transform: translateX(20px);
   transition: all 0.6s ease;
-  max-height: calc(100vh - 120px); /* Prevent vertical scroll */
+  max-height: calc(100vh - 120px);
   overflow-y: auto;
 }
 
@@ -104,6 +102,11 @@ button:hover {
 .round:nth-child(even) {
   background-color: #f7faff;
   border-left-color: #00aaff;
+}
+
+.round h2 {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .locked {
@@ -138,10 +141,17 @@ button:hover {
   }
 
   .round {
-    min-width: 200px;
-    padding-left: 10px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  #rounds {
+    padding: 10px;
+    gap: 10px;
   }
 }
+
   </style>
 </head>
 <body>
@@ -328,4 +338,5 @@ matchup.classList.add('winner-highlight');
   </script>
 </body>
 </html>
+
 
