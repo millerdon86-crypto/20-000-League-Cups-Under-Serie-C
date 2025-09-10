@@ -126,6 +126,28 @@ button:hover {
 
 /* Responsive layout for smaller screens */
 @media (max-width: 768
+
+        #summaryContainer {
+  margin-top: 30px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#summaryContainer h2 {
+  margin-bottom: 10px;
+  color: #0078D7;
+}
+
+#summaries p {
+  margin: 10px 0;
+  padding: 10px;
+  background: #f7faff;
+  border-left: 4px solid #0078D7;
+  white-space: pre-wrap;
+}
   </style>
 </head>
 <body>
@@ -143,6 +165,10 @@ button:hover {
     <div id="rounds" class="single-round-view"></div>
     <button onclick="startAgain()">Start Again</button>
   </div>
+  <div id="summaryContainer">
+  <h2>Round Summaries</h2>
+  <div id="summaries"></div>
+</div>
 
   <script>
     let participants = [];
@@ -237,28 +263,50 @@ button:hover {
 
 
     function lockRound(matchups, roundDiv) {
-      const winners = [];
-      let summaryText = `--- ${roundDiv.querySelector('h2').textContent} Results ---\n`;
+  const winners = [];
+  let summaryText = `--- ${roundDiv.querySelector('h2').textContent} Results ---\n`;
 
-      for (const matchup of matchups) {
-        const select = matchup.querySelector('select');
-        const winner = select.value;
-        if (!winner) return alert("Select all winners before submitting");
+  for (const matchup of matchups) {
+    const select = matchup.querySelector('select');
+    const winner = select.value;
+    if (!winner) return alert("Select all winners before submitting");
 
-        const scores = matchup.querySelectorAll('.score');
-        const p1 = scores[0].dataset.player;
-        const p2 = scores[1].dataset.player;
-        const s1 = scores[0].value || "0";
-        const s2 = scores[1].value || "0";
+    const scores = matchup.querySelectorAll('.score');
+    const p1 = scores[0].dataset.player;
+    const p2 = scores[1].dataset.player;
+    const s1 = scores[0].value || "0";
+    const s2 = scores[1].value || "0";
 
-        summaryText += `${p1} ${s1} - ${s2} ${p2} → Winner: ${winner}\n`;
+    summaryText += `${p1} ${s1} - ${s2} ${p2} → Winner: ${winner}\n`;
 
-        winners.push(winner);
-        select.disabled = true;
-        scores.forEach(input => input.disabled = true);
-        matchup.classList.add('locked');
-matchup.classList.add('winner-highlight');
-      }
+    winners.push(winner);
+    select.disabled = true;
+    scores.forEach(input => input.disabled = true);
+    matchup.classList.add('locked');
+    matchup.classList.add('winner-highlight');
+  }
+
+  // Append summary to persistent container
+  const summaryBlock = document.createElement('p');
+  summaryBlock.textContent = summaryText.trim();
+  const summariesContainer = document.getElementById('summaries');
+  if (summariesContainer) {
+    summariesContainer.appendChild(summaryBlock);
+  }
+
+  // Proceed to next round or show final winner
+  if (winners.length > 1) {
+    currentRound++;
+    generateRound(winners);
+  } else {
+    const finalBlock = document.createElement('p');
+    finalBlock.textContent = `🏅 Champion: ${winners[0]}`;
+    if (summariesContainer) {
+      summariesContainer.appendChild(finalBlock);
+    }
+  }
+}
+
 
       roundDiv.classList.add('locked');
 
@@ -296,6 +344,7 @@ matchup.classList.add('winner-highlight');
   </script>
 </body>
 </html>
+
 
 
 
