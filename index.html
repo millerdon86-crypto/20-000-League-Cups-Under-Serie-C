@@ -368,6 +368,7 @@ button:hover {
     updateNavButtons();
   }
 
+   function setupNavigationHandlers(
    document.getElementById('backBtn').addEventListener('click', () => {
   if (viewState === 'names') {
     // Go back to setup screen
@@ -382,6 +383,8 @@ button:hover {
     alert("Back from summary view is not yet implemented.");
   }
 });
+   }
+setupNavigationHandlers();
 
 document.getElementById('forwardBtn').addEventListener('click', () => {
   if (viewState === 'names') {
@@ -393,6 +396,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
