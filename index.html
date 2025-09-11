@@ -332,7 +332,7 @@ button:hover {
     }
   }
 
-  function generateRound(players) {
+function generateRound(players) {
   const container = document.getElementById('rounds');
   container.innerHTML = '';
 
@@ -340,7 +340,13 @@ button:hover {
   roundDiv.className = 'round visible';
   roundDiv.id = `round${currentRound}`;
 
-  const roundNames = { 32: "Round of 32", 16: "Round of 16", 8: "Quarter Final", 4: "Semi-Final", 2: "Final" };
+  const roundNames = {
+    32: "Round of 32",
+    16: "Round of 16",
+    8: "Quarter Final",
+    4: "Semi-Final",
+    2: "Final"
+  };
   const roundLabel = roundNames[players.length] || `Round ${currentRound + 1}`;
   roundDiv.innerHTML = `<h2>${roundLabel}</h2>`;
 
@@ -349,6 +355,7 @@ button:hover {
   for (let i = 0; i < players.length; i += 2) {
     const p1 = players[i];
     const p2 = players[i + 1] || "BYE";
+
     const matchup = document.createElement('div');
     matchup.className = 'matchup';
     matchup.innerHTML = `
@@ -361,6 +368,7 @@ button:hover {
         ${p2 !== "BYE" ? `<option value="${p2}">${p2}</option>` : ''}
       </select>
     `;
+
     const scores = matchup.querySelectorAll('.score');
     const select = matchup.querySelector('select');
     scores.forEach(input => {
@@ -372,18 +380,16 @@ button:hover {
         }
       });
     });
+
     roundDiv.appendChild(matchup);
     matchups.push(matchup);
   }
 
+  // ✅ Sticky Confirm Round button
   const confirmBtn = document.createElement('button');
+  confirmBtn.id = 'confirmRound';
   confirmBtn.textContent = currentRound === 0 ? `Confirm ${roundLabel}` : "Submit Round";
   confirmBtn.className = 'nav-button';
-  confirmBtn.style.marginTop = '20px';
-  confirmBtn.style.display = 'block';
-  confirmBtn.style.marginLeft = 'auto';
-  confirmBtn.style.marginRight = 'auto';
-
   confirmBtn.onclick = () => {
     const winners = matchups.map(match => {
       const select = match.querySelector('select');
@@ -521,6 +527,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
