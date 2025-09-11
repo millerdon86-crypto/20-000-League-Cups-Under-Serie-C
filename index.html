@@ -194,9 +194,9 @@ button:hover {
   let previousRoundHTML = '';
  
   function updateNavButtons() {
+  const navControls = document.getElementById('navControls');
   const backBtn = document.getElementById('backBtn');
   const forwardBtn = document.getElementById('forwardBtn');
-  const navControls = document.getElementById('navControls');
 
   if (viewState === 'setup') {
     navControls.style.display = 'none';
@@ -426,6 +426,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
