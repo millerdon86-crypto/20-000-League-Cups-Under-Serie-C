@@ -49,6 +49,13 @@ button {
 button:hover {
   background: #005fa3;
 }
+    .button-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* spacing between buttons */
+  margin-top: 20px;
+}
 
 .matchup {
   background: #fff;
@@ -186,6 +193,13 @@ button:hover {
   <div id="navControls" style="margin-top: 20px; text-align: center;">
   <button id="backBtn" style="display:none;">⬅ Back</button>
   <button id="forwardBtn" style="display:none;">Next ➡</button>
+</div>
+
+  <div class="button-group">
+  <button onclick="startTournament()">Start Tournament</button>
+  <button onclick="startAgain()">Start Again</button>
+  <button id="backBtn">⬅ Back</button>
+  <button id="forwardBtn">Next ➡</button>
 </div>
   
  <script>
@@ -426,6 +440,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
