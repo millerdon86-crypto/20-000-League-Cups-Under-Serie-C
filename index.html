@@ -422,10 +422,17 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
   }
 });
 
-</script>
+<script>
+  // ... all your JavaScript functions ...
 
+  document.addEventListener('DOMContentLoaded', () => {
+    setupNavigationHandlers();
+    updateNavButtons(); // Now safely hides nav buttons on initial load
+  });
+</script>
 </body>
 </html>
+
 
 
 
