@@ -369,67 +369,55 @@ button:hover {
     updateNavButtons();
   }
 
-  function lockRound(matchups, roundDiv) {
-  const winners = [];
-  let summaryText = `--- ${roundDiv.querySelector('h2').textContent} Results ---\n`;
-
-  for (const matchup of matchups) {
-    const select = matchup.querySelector('select');
-    const winner = select.value;
-    if (!winner) return alert("Select all winners before submitting");
-
-    const scores = matchup.querySelectorAll('.score');
-    const p1 = scores[0].dataset.player;
-    const p2 = scores[1].dataset.player;
-    const s1 = scores[0].value || "0";
-    const s2 = scores[1].value || "0";
-
-    summaryText += `${p1} ${s1} - ${s2} ${p2} → Winner: ${winner}\n`;
-
-    winners.push(winner);
-    select.disabled = true;
-    scores.forEach(input => input.disabled = true);
-    matchup.classList.add('locked');
-    matchup.classList.add('winner-highlight');
-  }
-
-  // 🔄 Save the current round HTML for back navigation
-  previousRoundHTML = roundDiv.outerHTML;
-
-  const summaryBlock = document.createElement('div');
-  summaryBlock.className = 'summary-block';
-  summaryBlock.innerHTML = `
-  <h2>${roundDiv.querySelector('h2').textContent} Summary</h2>
-  <div class="summary-text">${summaryText.trim()}</div>
-  <div style="text-align: center; margin-top: 20px;">
-    <button id="nextRoundBtn" class="nav-button">Continue to Next Round</button>
-  </div>
-`;
-
+  function lockRound(roundDiv, winners) {
   const container = document.getElementById('rounds');
+  const summaryBlock = document.createElement('div');
+  summaryBlock.className = 'round visible';
+
+  const summaryText = Array.from(roundDiv.querySelectorAll('.match')).map(match => {
+    const selects = match.querySelectorAll('select');
+    const scores = match.querySelectorAll('.score');
+    const team1 = selects[0].value;
+    const team2 = selects[1].value;
+    const score1 = scores[0].value;
+    const score2 = scores[1].value;
+    return `${team1} ${score1} - ${score2} ${team2}`;
+  }).join('<br>');
+
+  summaryBlock.innerHTML = `
+    <h2>${roundDiv.querySelector('h2').textContent} Summary</h2>
+    <div class="summary-text">${summaryText.trim()}</div>
+    <div style="text-align: center; margin-top: 20px;">
+      <button id="nextRoundBtn" class="nav-button">Continue to Next Round</button>
+    </div>
+  `;
+
   container.innerHTML = '';
   container.appendChild(summaryBlock);
-
   viewState = 'summary';
   updateNavButtons();
 
-  document.getElementById('nextRoundBtn').onclick = () => {
-    container.innerHTML = '';
-    if (winners.length > 1) {
-      currentRound++;
-      generateRound(winners);
-      viewState = 'round';
+  // ✅ Attach click handler after rendering
+  const nextBtn = document.getElementById('nextRoundBtn');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      container.innerHTML = '';
+      if (winners.length > 1) {
+        currentRound++;
+        generateRound(winners);
+        viewState = 'round';
+      } else {
+        const finalDiv = document.createElement('div');
+        finalDiv.className = 'round visible';
+        finalDiv.innerHTML = `<h2>🏅 Champion: ${winners[0]}</h2>`;
+        container.appendChild(finalDiv);
+        viewState = 'final';
+      }
       updateNavButtons();
-    } else {
-      const finalDiv = document.createElement('div');
-      finalDiv.className = 'round visible';
-      finalDiv.innerHTML = `<h2>🏅 Champion: ${winners[0]}</h2>`;
-      container.appendChild(finalDiv);
-      viewState = 'final';
-      updateNavButtons();
-    }
-  };
+    });
+  }
 }
+
 
 
   function startAgain() {
@@ -493,6 +481,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
