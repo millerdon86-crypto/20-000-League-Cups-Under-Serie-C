@@ -265,12 +265,20 @@ button:hover {
   const backBtn = document.getElementById('backBtn');
   const forwardBtn = document.getElementById('forwardBtn');
 
-  if (viewState === 'setup' || viewState === 'names') {
-    navControls.style.display = 'none';
-  } else {
-    navControls.style.display = 'block';
-    backBtn.style.display = ['names', 'round', 'summary'].includes(viewState) ? 'inline-block' : 'none';
-    forwardBtn.style.display = viewState === 'names' ? 'inline-block' : 'none';
+  if (navControls) {
+    if (viewState === 'setup' || viewState === 'names') {
+      navControls.style.display = 'none';
+    } else {
+      navControls.style.display = 'block';
+
+      if (backBtn) {
+        backBtn.style.display = ['names', 'round', 'summary'].includes(viewState) ? 'inline-block' : 'none';
+      }
+
+      if (forwardBtn) {
+        forwardBtn.style.display = viewState === 'names' ? 'inline-block' : 'none';
+      }
+    }
   }
 }
 
@@ -503,6 +511,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
