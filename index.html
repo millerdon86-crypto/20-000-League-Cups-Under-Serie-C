@@ -394,16 +394,19 @@ button:hover {
   summaryBlock.className = 'round visible';
 
   // ✅ Corrected selector from '.match' to '.matchup'
-  const summaryText = Array.from(roundDiv.querySelectorAll('.matchup')).map(match => {
-  const selects = match.querySelectorAll('select');
-  const scores = match.querySelectorAll('.score');
-  const team1 = scores[0]?.dataset.player || '';
-  const team2 = scores[1]?.dataset.player || '';
-  const score1 = scores[0]?.value || '0';
-  const score2 = scores[1]?.value || '0';
-  const winner = selects[0]?.value || '';
+ const summaryText = Array.from(roundDiv.querySelectorAll('.matchup')).map(match => {
+  const scoreInputs = match.querySelectorAll('.score');
+  const select = match.querySelector('select');
+
+  const team1 = scoreInputs[0]?.dataset.player || '';
+  const team2 = scoreInputs[1]?.dataset.player || '';
+  const score1 = scoreInputs[0]?.value || '0';
+  const score2 = scoreInputs[1]?.value || '0';
+  const winner = select?.value || '';
+
   return `${team1} - ${score1} vs ${team2} - ${score2} → Winner: ${winner}`;
 }).join('<br>');
+
 
   summaryBlock.innerHTML = `
     <h2>${roundDiv.querySelector('h2').textContent} Summary</h2>
@@ -500,6 +503,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
