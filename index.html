@@ -400,8 +400,8 @@ button:hover {
       selects.forEach(s => s.disabled = false);
       scores.forEach(i => i.disabled = false);
       viewState = 'round';
-      updateNavButtons();
-    }
+      }
+    updateNavButtons();
   });
 
   document.getElementById('forwardBtn').addEventListener('click', () => {
@@ -412,8 +412,10 @@ button:hover {
 }
 
 // Call it after defining
-setupNavigationHandlers();
-
+document.addEventListener('DOMContentLoaded', () => {
+  setupNavigationHandlers();
+  updateNavButtons();
+});
 
 document.getElementById('forwardBtn').addEventListener('click', () => {
   if (viewState === 'names') {
@@ -424,6 +426,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
