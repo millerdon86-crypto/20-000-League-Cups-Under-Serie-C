@@ -377,13 +377,26 @@ button:hover {
     document.getElementById('tournament').style.display = 'none';
     viewState = 'setup';
     updateNavButtons();
-  } else if (viewState === 'round') {
-    alert("Back from round view is not yet implemented.");
-  } else if (viewState === 'summary') {
-    alert("Back from summary view is not yet implemented.");
-  }
-});
-   }
+  else if (viewState === 'round') {
+  document.getElementById('tournament').style.display = 'none';
+  document.getElementById('setup').style.display = 'block';
+  document.getElementById('nameInputs').innerHTML = '';
+  viewState = 'names';
+  updateNavButtons();
+}
+  else if (viewState === 'summary') {
+  const container = document.getElementById('rounds');
+  container.innerHTML = previousRoundHTML;
+
+  // Re-enable any locked inputs if needed (optional)
+  const selects = container.querySelectorAll('select');
+  const scores = container.querySelectorAll('.score');
+  selects.forEach(s => s.disabled = false);
+  scores.forEach(i => i.disabled = false);
+
+  viewState = 'round';
+  updateNavButtons();
+}
 setupNavigationHandlers();
 
 document.getElementById('forwardBtn').addEventListener('click', () => {
@@ -396,6 +409,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
