@@ -360,8 +360,6 @@ button:hover {
 
 
   function startAgain() {
-    viewState = 'setup';
-    updateNavButtons();
     participants = [];
     currentRound = 0;
     rounds = [];
@@ -370,6 +368,8 @@ button:hover {
     document.getElementById('nameInputs').innerHTML = '';
     document.getElementById('rounds').innerHTML = '';
     document.getElementById('numParticipants').value = '';
+    viewState = 'setup';
+    updateNavButtons();
 
      }
 
@@ -414,6 +414,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
