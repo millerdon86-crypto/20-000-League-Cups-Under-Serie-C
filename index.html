@@ -315,59 +315,78 @@ button:hover {
   }
 
   function generateRound(players) {
-    const container = document.getElementById('rounds');
-    container.innerHTML = '';
+  const container = document.getElementById('rounds');
+  container.innerHTML = '';
 
-    const roundDiv = document.createElement('div');
-    roundDiv.className = 'round visible';
-    roundDiv.id = `round${currentRound}`;
+  const roundDiv = document.createElement('div');
+  roundDiv.className = 'round visible';
+  roundDiv.id = `round${currentRound}`;
 
-    const roundNames = { 32: "Round of 32", 16: "Round of 16", 8: "Quarter Final", 4: "Semi-Final", 2: "Final" };
-    const roundLabel = roundNames[players.length] || `Round ${currentRound + 1}`;
-    roundDiv.innerHTML = `<h2>${roundLabel}</h2>`;
+  const roundNames = { 32: "Round of 32", 16: "Round of 16", 8: "Quarter Final", 4: "Semi-Final", 2: "Final" };
+  const roundLabel = roundNames[players.length] || `Round ${currentRound + 1}`;
+  roundDiv.innerHTML = `<h2>${roundLabel}</h2>`;
 
-    const matchups = [];
+  const matchups = [];
 
-    for (let i = 0; i < players.length; i += 2) {
-      const p1 = players[i];
-      const p2 = players[i + 1] || "BYE";
-      const matchup = document.createElement('div');
-      matchup.className = 'matchup';
-      matchup.innerHTML = `
-        <label>${p1} vs ${p2}</label>
-        <input type="number" placeholder="${p1} score" class="score" data-player="${p1}">
-        <input type="number" placeholder="${p2} score" class="score" data-player="${p2}" ${p2 === "BYE" ? 'disabled value="0"' : ''}>
-        <select>
-          <option value="">Select Winner</option>
-          <option value="${p1}">${p1}</option>
-          ${p2 !== "BYE" ? `<option value="${p2}">${p2}</option>` : ''}
-        </select>
-      `;
-      const scores = matchup.querySelectorAll('.score');
-      const select = matchup.querySelector('select');
-      scores.forEach(input => {
-        input.addEventListener('input', () => {
-          const s1 = parseInt(scores[0].value);
-          const s2 = parseInt(scores[1].value);
-          if (!isNaN(s1) && !isNaN(s2)) {
-            select.value = s1 > s2 ? scores[0].dataset.player : scores[1].dataset.player;
-          }
-        });
+  for (let i = 0; i < players.length; i += 2) {
+    const p1 = players[i];
+    const p2 = players[i + 1] || "BYE";
+    const matchup = document.createElement('div');
+    matchup.className = 'matchup';
+    matchup.innerHTML = `
+      <label>${p1} vs ${p2}</label>
+      <input type="number" placeholder="${p1} score" class="score" data-player="${p1}">
+      <input type="number" placeholder="${p2} score" class="score" data-player="${p2}" ${p2 === "BYE" ? 'disabled value="0"' : ''}>
+      <select>
+        <option value="">Select Winner</option>
+        <option value="${p1}">${p1}</option>
+        ${p2 !== "BYE" ? `<option value="${p2}">${p2}</option>` : ''}
+      </select>
+    `;
+    const scores = matchup.querySelectorAll('.score');
+    const select = matchup.querySelector('select');
+    scores.forEach(input => {
+      input.addEventListener('input', () => {
+        const s1 = parseInt(scores[0].value);
+        const s2 = parseInt(scores[1].value);
+        if (!isNaN(s1) && !isNaN(s2)) {
+          select.value = s1 > s2 ? scores[0].dataset.player : scores[1].dataset.player;
+        }
       });
-      roundDiv.appendChild(matchup);
-      matchups.push(matchup);
+    });
+    roundDiv.appendChild(matchup);
+    matchups.push(matchup);
+  }
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.textContent = currentRound === 0 ? `Confirm ${roundLabel}` : "Submit Round";
+  confirmBtn.className = 'nav-button';
+  confirmBtn.style.marginTop = '20px';
+  confirmBtn.style.display = 'block';
+  confirmBtn.style.marginLeft = 'auto';
+  confirmBtn.style.marginRight = 'auto';
+
+  confirmBtn.onclick = () => {
+    const winners = matchups.map(match => {
+      const select = match.querySelector('select');
+      return select.value;
+    }).filter(Boolean);
+
+    if (winners.length !== matchups.length) {
+      alert("Please select a winner for each matchup.");
+      return;
     }
 
-    const confirmBtn = document.createElement('button');
-    confirmBtn.textContent = currentRound === 0 ? `Confirm ${roundLabel}` : "Submit Round";
-    confirmBtn.onclick = () => lockRound(matchups, roundDiv);
-    roundDiv.appendChild(confirmBtn);
+    previousRoundHTML = roundDiv.outerHTML;
+    lockRound(roundDiv, winners);
+  };
 
-    container.appendChild(roundDiv);
+  roundDiv.appendChild(confirmBtn);
+  container.appendChild(roundDiv);
 
-    viewState = 'round';
-    updateNavButtons();
-  }
+  viewState = 'round';
+  updateNavButtons();
+}
 
   function lockRound(roundDiv, winners) {
   const container = document.getElementById('rounds');
@@ -481,6 +500,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
