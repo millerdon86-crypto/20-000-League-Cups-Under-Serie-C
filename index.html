@@ -61,13 +61,15 @@ button:hover {
 }
 
 #rounds {
+  width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 180px); /* leaves room for buttons */
+  padding: 20px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 20px;
-  box-sizing: border-box;
-  max-height: calc(100vh - 100px);
-  }
+}
 
 .round {
   width: clamp(280px, 90vw, 500px);
@@ -239,6 +241,12 @@ button:hover {
 .nav-button:hover {
   background-color: #005fa3;
 }
+    #buttonControls {
+  margin-top: 15px;
+  padding-bottom: 20px;
+  text-align: center;
+  z-index: 1;
+}
 
   </style>
 </head>
@@ -270,7 +278,7 @@ button:hover {
   let previousRoundHTML = '';
  
   function updateNavButtons() {
-  const navControls = document.getElementById('navControls');
+  const navControls = document.getElementById('buttonControls');
   const backBtn = document.getElementById('backBtn');
   const forwardBtn = document.getElementById('forwardBtn');
 
@@ -530,6 +538,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
