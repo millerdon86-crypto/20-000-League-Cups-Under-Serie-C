@@ -198,7 +198,7 @@ button:hover {
   const backBtn = document.getElementById('backBtn');
   const forwardBtn = document.getElementById('forwardBtn');
 
-  if (viewState === 'setup') {
+  if (viewState === 'setup' || viewState === 'names') {
     navControls.style.display = 'none';
   } else {
     navControls.style.display = 'block';
@@ -426,6 +426,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
