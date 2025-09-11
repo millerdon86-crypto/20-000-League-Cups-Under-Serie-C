@@ -393,13 +393,14 @@ button:hover {
   const summaryBlock = document.createElement('div');
   summaryBlock.className = 'round visible';
 
-  const summaryText = Array.from(roundDiv.querySelectorAll('.match')).map(match => {
+  // ✅ Corrected selector from '.match' to '.matchup'
+  const summaryText = Array.from(roundDiv.querySelectorAll('.matchup')).map(match => {
     const selects = match.querySelectorAll('select');
     const scores = match.querySelectorAll('.score');
-    const team1 = selects[0].value;
-    const team2 = selects[1].value;
-    const score1 = scores[0].value;
-    const score2 = scores[1].value;
+    const team1 = selects[0]?.value || '';
+    const team2 = selects[1]?.value || '';
+    const score1 = scores[0]?.value || '0';
+    const score2 = scores[1]?.value || '0';
     return `${team1} ${score1} - ${score2} ${team2}`;
   }).join('<br>');
 
@@ -436,8 +437,6 @@ button:hover {
     });
   }
 }
-
-
 
   function startAgain() {
     participants = [];
@@ -500,6 +499,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
