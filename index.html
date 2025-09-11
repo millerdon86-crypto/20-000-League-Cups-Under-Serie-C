@@ -86,11 +86,10 @@ button:hover {
 }
 
 .round button#confirmRound {
-  position: sticky;
-  bottom: 20px;
-  background: #0078D7;
-  z-index: 10;
   margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
@@ -391,6 +390,10 @@ function generateRound(players) {
   confirmBtn.textContent = currentRound === 0 ? `Confirm ${roundLabel}` : "Submit Round";
   confirmBtn.className = 'nav-button';
   confirmBtn.onclick = () => {
+  confirmBtn.style.marginTop = '20px';
+  confirmBtn.style.display = 'block';
+  confirmBtn.style.marginLeft = 'auto';
+  confirmBtn.style.marginRight = 'auto';
     const winners = matchups.map(match => {
       const select = match.querySelector('select');
       return select.value;
@@ -527,6 +530,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
