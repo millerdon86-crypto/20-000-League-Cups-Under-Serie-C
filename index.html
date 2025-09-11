@@ -194,12 +194,18 @@ button:hover {
   let previousRoundHTML = '';
  
   function updateNavButtons() {
-    const backBtn = document.getElementById('backBtn');
-    const forwardBtn = document.getElementById('forwardBtn');
+  const backBtn = document.getElementById('backBtn');
+  const forwardBtn = document.getElementById('forwardBtn');
+  const navControls = document.getElementById('navControls');
 
+  if (viewState === 'setup') {
+    navControls.style.display = 'none';
+  } else {
+    navControls.style.display = 'block';
     backBtn.style.display = ['names', 'round', 'summary'].includes(viewState) ? 'inline-block' : 'none';
     forwardBtn.style.display = viewState === 'names' ? 'inline-block' : 'none';
   }
+}
 
   function generateNameInputs() {
     const num = parseInt(document.getElementById('numParticipants').value);
@@ -420,6 +426,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
