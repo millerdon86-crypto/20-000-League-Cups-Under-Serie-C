@@ -82,7 +82,16 @@ button:hover {
   align-items: center;
   margin-top: 30px;
   text-align: center;
-  padding-bottom: 60px;
+  position: relative;         /* Needed for sticky child positioning */
+  padding-bottom: 80px;       /* Prevents button from being clipped */
+}
+
+.round button#confirmRound {
+  position: sticky;
+  bottom: 20px;
+  background: #0078D7;
+  z-index: 10;
+  margin-top: 20px;
 }
 
 .round p {
@@ -512,6 +521,7 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
