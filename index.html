@@ -386,7 +386,6 @@ button:hover {
       document.getElementById('setup').style.display = 'block';
       document.getElementById('tournament').style.display = 'none';
       viewState = 'setup';
-      updateNavButtons();
     } else if (viewState === 'round') {
       document.getElementById('tournament').style.display = 'none';
       document.getElementById('setup').style.display = 'block';
@@ -422,16 +421,10 @@ document.getElementById('forwardBtn').addEventListener('click', () => {
   }
 });
 
-<script>
-  // ... all your JavaScript functions ...
-
-  document.addEventListener('DOMContentLoaded', () => {
-    setupNavigationHandlers();
-    updateNavButtons(); // Now safely hides nav buttons on initial load
-  });
 </script>
 </body>
 </html>
+
 
 
 
